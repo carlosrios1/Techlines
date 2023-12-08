@@ -1,3 +1,13 @@
+# `Sistema Techlines`
+
+Sistema E-Commerce de Venta de Articulos Tecnologicos.
+
+## Requisitos:
+1. MongoDB
+2. ReactJS
+3. Chakra UI
+4. Tener instalado MongoDB Compass
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
