@@ -9,8 +9,17 @@ import {
 } from "@chakra-ui/react";
 import { BiExpand } from "react-icons/bi";
 import React from "react";
+import {
+  addToFavorites,
+  removeFromFavorites,
+} from "../redux/actions/productActions";
+import { useSelector, useDispatch } from "react-redux";
+import { MdOutlineFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
 
 const ProductCard = ({ product, loading }) => {
+  const dispatch = useDispatch();
+  const { favorites } = useSelector((state) => state.product);
+
   return (
     //Mostrara un esqueleto de la interfaz
     <Skeleton isLoaded={!loading} _hover={{ size: 1.5 }}>
@@ -27,7 +36,7 @@ const ProductCard = ({ product, loading }) => {
           alt={product.name}
           height="200px"
         />
-        
+
         {product.stock < 5 ? (
           <Badge colorScheme="yellow">
             Sólamente {product.stock} disponibles
@@ -58,11 +67,28 @@ const ProductCard = ({ product, loading }) => {
           </Text>
         </Flex>
 
-        <IconButton
-          icon={<BiExpand size="20" />}
-          colorScheme="cyan"
-          size="sm"
-        />
+        <Flex justify='space-between' mt="2">
+          {favorites.includes(product._id) ? (
+            <IconButton
+              icon={<MdOutlineFavorite size="20px" />}
+              colorScheme="cyan"
+              size="sm"
+              onClick={() => dispatch(removeFromFavorites(product._id))}
+            />
+          ) : (
+            <IconButton
+              icon={<MdOutlineFavoriteBorder size="20px" />}
+              colorScheme="cyan"
+              size="sm"
+              onClick={() => dispatch(addToFavorites(product._id))}
+            />
+          )}
+          <IconButton
+            icon={<BiExpand size="20" />}
+            colorScheme="cyan"
+            size="sm"
+          />
+        </Flex>
       </Box>
     </Skeleton>
   );
