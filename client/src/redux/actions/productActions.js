@@ -1,4 +1,4 @@
-import product, { setProducts, setLoading, setError, setPagination, setFavorites, setFavoritesToggle } from "../slices/product";
+import { setProducts, setLoading, setError, setPagination, setFavorites, setFavoritesToggle, setProduct } from "../slices/product";
 import axios from "axios";
 
 //Curried Function
@@ -55,5 +55,24 @@ export const toggleFavorites = (toggle) => async (dispatch, getState) => {
     } else {
         dispatch(setFavoritesToggle(false));
         dispatch(getProducts(1));
+    }
+};
+
+export const getProduct = (id) => async (dispatch) => {
+    dispatch(setLoading(true))
+
+    try {
+        const { data } = await axios.get(`/api/productos/${id}`)
+        dispatch(setProduct(data));
+    } catch (error) {
+        dispatch(
+            setError(
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+                        ? error.message
+                        : 'Ocurrió un error esperado. Por favor, inténtelo de nuevo más tarde.'
+            )
+        );
     }
 }

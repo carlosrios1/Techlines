@@ -8,21 +8,23 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import { BiExpand } from "react-icons/bi";
-import React from "react";
+import React, { useState } from "react";
 import {
   addToFavorites,
   removeFromFavorites,
 } from "../redux/actions/productActions";
 import { useSelector, useDispatch } from "react-redux";
 import { MdOutlineFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
+import { Link as ReactLink } from "react-router-dom";
 
 const ProductCard = ({ product, loading }) => {
   const dispatch = useDispatch();
   const { favorites } = useSelector((state) => state.product);
+  const [isShown, setIsShown] = useState(false);
 
   return (
     //Mostrara un esqueleto de la interfaz
-    <Skeleton isLoaded={!loading} _hover={{ size: 1.5 }}>
+    <Skeleton isLoaded={!loading}>
       <Box
         _hover={{ transform: "scale(1.1)", transitionDuration: "0.5s" }}
         borderWidth="1px"
@@ -31,8 +33,10 @@ const ProductCard = ({ product, loading }) => {
         shadow="md"
       >
         <Image
-          src={product.images[0]}
-          fallback="https://via.placeholder.com/150"
+          onMouseEnter={() => setIsShown(true)}
+          onMouseLeave={() => setIsShown(false)}
+          src={product.images[isShown && product.images.length === 2 ? 1 : 0]}
+          fallbackSrc="https://via.placeholder.com/150"
           alt={product.name}
           height="200px"
         />
@@ -67,7 +71,7 @@ const ProductCard = ({ product, loading }) => {
           </Text>
         </Flex>
 
-        <Flex justify='space-between' mt="2">
+        <Flex justify="space-between" mt="2">
           {favorites.includes(product._id) ? (
             <IconButton
               icon={<MdOutlineFavorite size="20px" />}
@@ -85,6 +89,8 @@ const ProductCard = ({ product, loading }) => {
           )}
           <IconButton
             icon={<BiExpand size="20" />}
+            as={ReactLink}
+            to={`/producto/${product._id}`}
             colorScheme="cyan"
             size="sm"
           />

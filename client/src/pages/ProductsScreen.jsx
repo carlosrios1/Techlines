@@ -1,4 +1,14 @@
-import { Box, Button, Center, Wrap, WrapItem } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Button,
+  Center,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../components/ProductCard";
@@ -29,14 +39,22 @@ const ProductsScreen = () => {
             minHeight="80vh"
             mx={{ base: "12", md: "20", lg: "32" }}
           >
+            {error ? (
+              <Alert status="error">
+                <AlertIcon />
+                <AlertTitle>We are sorry!</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            ) : (
+              products.map((product) => (
+                <WrapItem key={product._id}>
+                  <Center w="250px" h="450px">
+                    <ProductCard product={product} loading={loading} />
+                  </Center>
+                </WrapItem>
+              ))
+            )}
             {/* Recorre todos los productos que están en la BDD */}
-            {products.map((product) => (
-              <WrapItem key={product._id}>
-                <Center w="250px" h="450px">
-                  <ProductCard product={product} loading={loading} />
-                </Center>
-              </WrapItem>
-            ))}
           </Wrap>
           {!favoritesToggled && (
             <Wrap spacing="10px" justify="center" p="5">
@@ -60,7 +78,6 @@ const ProductsScreen = () => {
                   </Button>
                 );
               })}
-
               <Button
                 colorScheme="cyan"
                 onClick={() => paginationButtonClick(pagination.totalPages)}
